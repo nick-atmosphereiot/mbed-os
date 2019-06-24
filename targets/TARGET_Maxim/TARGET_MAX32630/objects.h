@@ -45,8 +45,8 @@
 #include "spim_regs.h"
 #include "pt_regs.h"
 #include "adc_regs.h"
-#include "uart.h"
-#include "adc.h"
+#include "uart/uart.h"
+#include "uart/adc.h"
 
 #ifdef __cplusplus
 extern "C" {
