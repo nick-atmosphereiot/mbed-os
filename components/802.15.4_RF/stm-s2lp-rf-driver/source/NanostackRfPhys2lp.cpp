@@ -29,6 +29,7 @@
 #include "Timeout.h"
 #include "Thread.h"
 #include "mbed_wait_api.h"
+#include "platform/mbed_error.h"
 
 using namespace mbed;
 using namespace rtos;
@@ -1083,10 +1084,10 @@ static void rf_reset(void)
 {
     // Shutdown
     rf->SDN = 1;
-    wait_ms(10);
+    ThisThread::sleep_for(10);
     // Wake up
     rf->SDN = 0;
-    wait_ms(10);
+    ThisThread::sleep_for(10);
 }
 
 static void rf_init(void)

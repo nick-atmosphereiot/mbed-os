@@ -1,12 +1,13 @@
 
-/** \addtogroup platform */
+/** \ingroup mbed-os-public */
+/** \addtogroup platform-public-api */
 /** @{*/
 /**
  * \defgroup platform_Assert Assert macros
  * @{
  */
 /* mbed Microcontroller Library
- * Copyright (c) 2006-2013 ARM Limited
+ * Copyright (c) 2006-2019 ARM Limited
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +25,7 @@
 #ifndef MBED_ASSERT_H
 #define MBED_ASSERT_H
 
-#include "mbed_preprocessor.h"
-#include "mbed_toolchain.h"
+#include "platform/mbed_toolchain.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -124,8 +124,14 @@ do {                                                     \
  *  };
  *  @endcode
  */
-#define MBED_STRUCT_STATIC_ASSERT(expr, msg) int : (expr) ? 0 : -1
-
+#if defined(__cplusplus) && (__cplusplus >= 201103L || __cpp_static_assert >= 200410L)
+#define MBED_STRUCT_STATIC_ASSERT(expr, msg) static_assert(expr, msg)
+#elif !defined(__cplusplus) && __STDC_VERSION__ >= 201112L
+#define MBED_STRUCT_STATIC_ASSERT(expr, msg) _Static_assert(expr, msg)
+#else
+#include <stdbool.h>
+#define MBED_STRUCT_STATIC_ASSERT(expr, msg) bool : (expr) ? 0 : -1
+#endif
 
 #endif
 

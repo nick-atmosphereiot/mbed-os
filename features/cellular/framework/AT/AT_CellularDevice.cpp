@@ -241,7 +241,7 @@ nsapi_error_t AT_CellularDevice::set_pin(const char *sim_pin)
     const bool stored_debug_state = _at->get_debug();
     _at->set_debug(false);
 
-    _at->at_cmd_discard("+CPIN", "=,", "%s", sim_pin);
+    _at->at_cmd_discard("+CPIN", "=", "%s", sim_pin);
 
     _at->set_debug(stored_debug_state);
 
@@ -437,9 +437,6 @@ nsapi_error_t AT_CellularDevice::init()
 
 nsapi_error_t AT_CellularDevice::shutdown()
 {
-    if (_state_machine) {
-        _state_machine->reset();
-    }
     CellularDevice::shutdown();
 
     return _at->at_cmd_discard("+CFUN", "=0");

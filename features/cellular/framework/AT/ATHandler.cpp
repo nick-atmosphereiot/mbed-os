@@ -21,12 +21,10 @@
 #include "ATHandler.h"
 #include "mbed_poll.h"
 #include "FileHandle.h"
-#include "mbed_wait_api.h"
 #include "mbed_debug.h"
 #include "rtos/ThisThread.h"
 #include "Kernel.h"
 #include "CellularUtil.h"
-#include <stdarg.h>
 #include "SingletonPtr.h"
 
 using namespace mbed;
@@ -1223,7 +1221,7 @@ void ATHandler::cmd_start(const char *cmd)
     _cmd_start = true;
 }
 
-void ATHandler::handle_args(const char *format, va_list list)
+void ATHandler::handle_args(const char *format, std::va_list list)
 {
     while (*format != '\0') {
         if (*format == 'd') {

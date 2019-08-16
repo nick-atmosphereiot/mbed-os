@@ -21,7 +21,7 @@
 
 // mbed Includes
 #include "mbed_assert.h"
-#include "rtos/rtos_idle.h"
+#include "rtos/source/rtos_idle.h"
 #include "platform/mbed_power_mgmt.h"
 #include "mbed_critical.h"
 
@@ -40,6 +40,7 @@
 
 // Nordic Includes
 #include "nrf.h"
+#include "nrf5x_lf_clk_helper.h"
 
 #include "NRFCordioHCIDriver.h"
 #include "NRFCordioHCITransportDriver.h"
@@ -77,6 +78,14 @@ using namespace ble::vendor::cordio;
 
 /*! \brief      Typical implementation revision number (LlRtCfg_t::implRev). */
 #define LL_IMPL_REV             0x2303
+
+#if MBED_CONF_NORDIC_NRF_LF_CLOCK_SRC == NRF_LF_SRC_SYNTH
+#define NRF_LF_CLK_SRC CLOCK_LFCLKSRC_SRC_Synth
+#elif MBED_CONF_NORDIC_NRF_LF_CLOCK_SRC == NRF_LF_SRC_XTAL
+#define NRF_LF_CLK_SRC CLOCK_LFCLKSRC_SRC_Xtal
+#elif MBED_CONF_NORDIC_NRF_LF_CLOCK_SRC == NRF_LF_SRC_RC
+#define NRF_LF_CLK_SRC CLOCK_LFCLKSRC_SRC_RC
+#endif
 
 // Note to implementer: this should be amended if the Cordio stack is updated
 
@@ -283,7 +292,7 @@ void NRFCordioHCIDriver::do_initialize()
     }
 
     /* configure low-frequency clock */
-    NRF_CLOCK->LFCLKSRC             = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
+    NRF_CLOCK->LFCLKSRC             = (NRF_LF_CLK_SRC << CLOCK_LFCLKSRC_SRC_Pos);
     NRF_CLOCK->EVENTS_LFCLKSTARTED  = 0;
     NRF_CLOCK->TASKS_LFCLKSTART     = 1;
     while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0)
@@ -359,7 +368,7 @@ bool NRFCordioHCIDriver::get_random_static_address(ble::address_t& address)
     return true;
 }
 
-ble::vendor::cordio::CordioHCIDriver& ble_cordio_get_hci_driver() { 
+ble::vendor::cordio::CordioHCIDriver& ble_cordio_get_hci_driver() {
     static NRFCordioHCITransportDriver transport_driver;
 
     static NRFCordioHCIDriver hci_driver(

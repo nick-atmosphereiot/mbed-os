@@ -124,19 +124,19 @@ nsapi_error_t CellularDevice::create_state_machine()
         _nw->attach(callback(this, &CellularDevice::stm_callback));
         _state_machine = new CellularStateMachine(*this, *get_queue(), *_nw);
         _state_machine->set_cellular_callback(callback(this, &CellularDevice::stm_callback));
-        err = _state_machine->start_dispatch();
-        if (err) {
-            tr_error("Start state machine failed.");
-            delete _state_machine;
-            _state_machine = NULL;
-        }
-
         if (strlen(_plmn)) {
             _state_machine->set_plmn(_plmn);
         }
         if (strlen(_sim_pin)) {
             _state_machine->set_sim_pin(_sim_pin);
         }
+    }
+    err = _state_machine->start_dispatch();
+    if (err) {
+        tr_error("Start state machine failed.");
+        delete _state_machine;
+        _state_machine = NULL;
+        return err;
     }
     return err;
 }
@@ -229,6 +229,9 @@ void CellularDevice::cellular_callback(nsapi_event_t ev, intptr_t ptr, CellularC
 
 nsapi_error_t CellularDevice::shutdown()
 {
+    if (_state_machine) {
+        _state_machine->stop();
+    }
     CellularContext *curr = get_context_list();
     while (curr) {
         curr->cellular_callback(NSAPI_EVENT_CONNECTION_STATUS_CHANGE, NSAPI_STATUS_DISCONNECTED);

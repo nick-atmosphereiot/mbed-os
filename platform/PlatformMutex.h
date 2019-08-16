@@ -1,5 +1,5 @@
 /* mbed Microcontroller Library
- * Copyright (c) 2006-2013 ARM Limited
+ * Copyright (c) 2006-2019 ARM Limited
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,9 @@
 
 #include "platform/NonCopyable.h"
 
-/** \addtogroup platform
- * @{
- */
+/** \ingroup mbed-os-public */
+/** \addtogroup platform-public-api */
+/** @{*/
 
 /** \defgroup platform_PlatformMutex PlatformMutex class
  * @{
@@ -37,8 +37,9 @@
  * - When the RTOS is absent, all methods are defined as noop.
  */
 
-#ifdef MBED_CONF_RTOS_PRESENT
+#ifdef MBED_CONF_RTOS_API_PRESENT
 
+// rtos::Mutex is itself a dummy class if the RTOS API is present, but not the RTOS
 #include "rtos/Mutex.h"
 typedef rtos::Mutex PlatformMutex;
 

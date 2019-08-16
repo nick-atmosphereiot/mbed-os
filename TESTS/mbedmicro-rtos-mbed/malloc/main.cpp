@@ -19,13 +19,9 @@
 #include "unity/unity.h"
 
 
-#if defined(MBED_RTOS_SINGLE_THREAD)
+#if defined(MBED_RTOS_SINGLE_THREAD) || !DEVICE_USTICKER
 #error [NOT_SUPPORTED] test not supported
-#endif
-
-#if !DEVICE_USTICKER
-#error [NOT_SUPPORTED] test not supported
-#endif
+#else
 
 using utest::v1::Case;
 
@@ -122,7 +118,7 @@ void test_alloc_and_free(void)
     int size = SIZE_INCREMENTS;
     int loop = ALLOC_LOOP;
     while (loop) {
-        data = malloc(size);
+        data = count < ALLOC_ARRAY_SIZE ? malloc(size) : NULL;
         if (NULL != data) {
             array[count++] = data;
             memset((void *)data, 0xdeadbeef, size);
@@ -221,3 +217,5 @@ int main()
 {
     return !utest::v1::Harness::run(specification);
 }
+
+#endif // defined(MBED_RTOS_SINGLE_THREAD) || !DEVICE_USTICKER

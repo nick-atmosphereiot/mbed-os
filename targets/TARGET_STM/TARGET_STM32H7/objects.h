@@ -36,6 +36,7 @@
 #include "PinNames.h"
 #include "stm32h7xx_ll_usart.h"
 #include "stm32h7xx_ll_rtc.h"
+#include "stm32h7xx_ll_tim.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -168,6 +169,9 @@ struct can_s {
 /* serial_api.c */
 #define RCC_LPUART1CLKSOURCE_PCLK1  RCC_LPUART1CLKSOURCE_PLL2
 #define RCC_LPUART1CLKSOURCE_SYSCLK RCC_LPUART1CLKSOURCE_D3PCLK1
+
+/* watchdog_api.c */
+#define IWDG IWDG1
 
 #ifdef __cplusplus
 }

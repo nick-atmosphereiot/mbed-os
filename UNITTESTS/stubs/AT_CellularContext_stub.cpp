@@ -166,15 +166,9 @@ AT_CellularBase::CellularProperty AT_CellularContext::pdp_type_t_to_cellular_pro
     return prop;
 }
 
-pdp_type_t AT_CellularContext::string_to_pdp_type(const char *pdp_type)
-{
-    return IPV4V6_PDP_TYPE;
-}
-
 // PDP Context handling
-nsapi_error_t AT_CellularContext::delete_current_context()
+void AT_CellularContext::delete_current_context()
 {
-    return NSAPI_ERROR_OK;
 }
 
 nsapi_error_t AT_CellularContext::do_user_authentication()
@@ -286,4 +280,9 @@ void AT_CellularContext::set_disconnect()
 void AT_CellularContext::do_connect_with_retry()
 {
 
+}
+
+char *AT_CellularContext::get_interface_name(char *interface_name)
+{
+    return NULL;
 }
